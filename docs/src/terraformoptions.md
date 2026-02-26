@@ -30,13 +30,13 @@
 | lockdown_default_seclist | Whether to remove all default security rules from the VCN Default Security List | bool | true|
 | nat_gateway_display_name | (Updatable) Name of NAT Gateway. It does not have to be unique. | string | nat-gateway|
 | nat_gateway_public_ip_id | OCID of reserved IP address for NAT gateway. If default value "none" is used, then a public IP address is selected from Oracle’s public IP pool. | string | none|
+| ipv6_nat_route_table_display_name | (Updatable) Name of the dual-stack route table (NAT for IPv4, IGW for IPv6). Does not have to be unique. | string | ipv6-nat-route|
 | nat_gateway_route_rules | (Updatable) List of routing rules to add to NAT Gateway Route Table | list(map(string)) | null|
 | service_gateway_display_name | (Updatable) Name of Service Gateway. Does not have to be unique. | string | service-gateway|
-| ipv6_nat_route_table_display_name | (Updatable) Name of the dual-stack route table (NAT for IPv4, IGW for IPv6). Does not have to be unique. | string | ipv6-nat-route|
 | vcn_byoipv6_cidr_details | (Optional) List of BYOIPv6 CIDR block details for the VCN. Each entry requires a byoipv6range_id and ipv6cidr_block. | list(object) | []|
 | vcn_cidrs_ipv4 | (Updatable) The list of IPv4 CIDR blocks the VCN will use. The CIDR block specified for the VCN must not overlap with the CIDR block of another network. | list(string) | ["10.0.0.0/16"]|
 | vcn_cidrs_ipv6 | (Optional) List of IPv6 ULA (private) CIDR blocks for the VCN. Maps to the OCI ipv6private_cidr_blocks attribute. | list(string) | []|
-| vcn_dns_label | (Optional)A DNS label for the VCN, used in conjunction with the VNIC's hostname and subnet's DNS label to form a fully qualified domain name (FQDN) for each VNIC within this subnet. DNS resolution for hostnames in the VCN is disabled if null. | string | vcnmodule|
+| vcn_dns_label | (Optional) A DNS label for the VCN, used in conjunction with the VNIC's hostname and subnet's DNS label to form a fully qualified domain name (FQDN) for each VNIC within this subnet. DNS resolution for hostnames in the VCN is disabled if null. | string | vcnmodule|
 | vcn_is_oracle_gua_allocation_enabled | (Optional) Whether Oracle assigns a Global Unicast Address (GUA) IPv6 /56 CIDR block to the VCN when IPv6 is enabled. | bool | true|
 | vcn_name | (Optional)(Updatable) The name of the VCN that will be appended to the label_prefix. | string | vcn|
 
@@ -44,4 +44,29 @@
 
 | Parameter | Description | Type        | Default |
 | --------- | ----------- | ----------- | ------- |
-| subnets | Subnets to be created in the VCN | any |{}|
+| subnets | Subnets to be created in the VCN. Supports `ipv6cidr_blocks` (shorthand "newbits, netnum" or explicit CIDR) and `ipv6_nat_route` (boolean, uses ipv6_nat route table for private subnets needing IPv6 egress). | any |{}|
+
+### Outputs
+
+| Parameter | Description |
+| --------- | ----------- |
+| vcn_id | id of vcn that is created |
+| nat_gateway_id | id of nat gateway if it is created |
+| internet_gateway_id | id of internet gateway if it is created |
+| service_gateway_id | id of service gateway if it is created |
+| ig_route_id | id of internet gateway route table |
+| ipv6_nat_route_id | id of the dual-stack route table (NAT Gateway for IPv4, Internet Gateway for IPv6) |
+| nat_route_id | id of VCN NAT gateway route table |
+| sgw_route_id | id of VCN Service gateway route table |
+| internet_gateway_all_attributes | all attributes of created internet gateway |
+| ig_route_all_attributes | all attributes of created ig route table |
+| ipv6_nat_route_all_attributes | all attributes of the dual-stack route table (NAT for IPv4, IGW for IPv6) |
+| lpg_all_attributes | all attributes of created lpg |
+| nat_gateway_all_attributes | all attributes of created nat gateway |
+| nat_route_all_attributes | all attributes of created nat gateway route table |
+| service_gateway_all_attributes | all attributes of created service gateway |
+| vcn_all_attributes | all attributes of created vcn |
+| vcn_ipv6cidr_blocks | IPv6 CIDR blocks of the VCN (includes Oracle GUA, ULA, and BYOIPv6 prefixes) |
+| subnet_id | id of subnets created by the module |
+| subnet_all_attributes | all attributes of subnets created by the module |
+| default_security_list_id | id of the VCN default security list |

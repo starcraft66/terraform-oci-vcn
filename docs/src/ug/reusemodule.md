@@ -41,6 +41,11 @@ module "vcn" {
   vcn_dns_label            = var.vcn_dns_label
   vcn_name                 = var.vcn_name
 
+  # IPv6 parameters (optional, requires enable_ipv6 = true)
+  # vcn_is_oracle_gua_allocation_enabled = true      # Oracle GUA /56 allocation
+  # vcn_cidrs_ipv6                       = []        # ULA CIDR blocks
+  # vcn_byoipv6_cidr_details             = []        # BYOIPv6 CIDR blocks
+
   # gateways parameters
   internet_gateway_display_name = var.internet_gateway_display_name
   nat_gateway_display_name      = var.nat_gateway_display_name
@@ -59,6 +64,7 @@ output "module_vcn_ids" {
   value = {
     internet_gateway_id          = module.vcn.internet_gateway_id
     internet_gateway_route_id    = module.vcn.ig_route_id
+    ipv6_nat_route_id            = module.vcn.ipv6_nat_route_id
     nat_gateway_id               = module.vcn.nat_gateway_id
     nat_gateway_route_id         = module.vcn.nat_route_id
     service_gateway_id           = module.vcn.service_gateway_id
@@ -67,6 +73,7 @@ output "module_vcn_ids" {
     vcn_default_route_table_id   = module.vcn.vcn_all_attributes.default_route_table_id
     vcn_default_dhcp_options_id  = module.vcn.vcn_all_attributes.default_dhcp_options_id
     vcn_id                       = module.vcn.vcn_id
+    vcn_ipv6cidr_blocks          = module.vcn.vcn_ipv6cidr_blocks
   }
 }
 ```

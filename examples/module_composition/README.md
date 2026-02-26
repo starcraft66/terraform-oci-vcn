@@ -55,17 +55,25 @@ module "vcn" {
   # general oci parameters
   compartment_id = var.compartment_id
   label_prefix   = var.label_prefix
+  freeform_tags  = var.freeform_tags
 
   # vcn parameters
-  create_internet_gateway = var.create_internet_gateway
-  create_nat_gateway      = var.create_nat_gateway
-  create_service_gateway  = var.create_service_gateway
-  tags                     = var.freeform_tags
+  create_internet_gateway  = var.create_internet_gateway
+  create_nat_gateway       = var.create_nat_gateway
+  create_service_gateway   = var.create_service_gateway
+  enable_ipv6              = var.enable_ipv6
   vcn_cidrs_ipv4           = var.vcn_cidrs_ipv4
   vcn_dns_label            = var.vcn_dns_label
   vcn_name                 = var.vcn_name
   lockdown_default_seclist = var.lockdown_default_seclist
-  attached_drg_id          = var.attached_drg_id
+
+  # IPv6 parameters (optional, requires enable_ipv6 = true)
+  # vcn_is_oracle_gua_allocation_enabled = var.vcn_is_oracle_gua_allocation_enabled
+  # vcn_cidrs_ipv6                       = var.vcn_cidrs_ipv6
+  # vcn_byoipv6_cidr_details             = var.vcn_byoipv6_cidr_details
+
+  # gateways parameters
+  attached_drg_id = var.attached_drg_id
 }
 ```
 

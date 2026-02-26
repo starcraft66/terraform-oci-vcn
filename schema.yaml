@@ -6,7 +6,7 @@ groupings:
     variables:
     - region
     - compartment_id
-    - vcn_cidr
+    - vcn_cidrs_ipv4
     - vcn_name
     - vcn_dns_label
     - lockdown_default_seclist
@@ -60,6 +60,27 @@ variables:
     type: string
     required: false
     default: null
+
+  enable_ipv6:
+    type: boolean
+    title: Enable IPv6
+    description: Whether IPv6 is enabled for the VCN
+    required: false
+    default: false
+
+  vcn_is_oracle_gua_allocation_enabled:
+    type: boolean
+    title: Oracle GUA Allocation
+    description: Whether Oracle assigns a GUA IPv6 /56 CIDR block to the VCN when IPv6 is enabled
+    required: false
+    default: true
+
+  vcn_cidrs_ipv6:
+    type: list(string)
+    title: VCN IPv6 ULA CIDRs
+    description: List of IPv6 ULA (private) CIDR blocks for the VCN
+    required: false
+    default: []
 
   freeform_tags:
     type: map

@@ -4,15 +4,18 @@ The [Terraform VCN][repo] for [Oracle Cloud Infrastructure][OCI] provides a reus
 
 It creates the following resources:
 
-* A VCN with one or more customizable CIDR blocks
+* A VCN with one or more customizable IPv4 CIDR blocks
+* Optional IPv6 dual-stack support with Oracle GUA allocation, ULA, or BYOIPv6
 * An optional internet gateway and a route table
-* An optional NAT gateway
-* An optional service gateway
+* An optional NAT gateway and a route table
+* An optional service gateway and a route table
+* An optional dual-stack route table (NAT for IPv4, IGW for IPv6) for private subnets with IPv6 internet egress
 * One or more optional Local Peering Gateways in requestor or acceptor mode, and possibilities to associate a Route Table
+* Optional subnets with IPv6 CIDR support (shorthand "newbits, netnum" notation or explicit CIDRs)
 
-It also controls the Default Security List, with a *Lockdown mode* that can be enabled or disabled.
+It also controls the Default Security List, with a *Lockdown mode* that can be enabled or disabled. When IPv6 is enabled, the default security list includes IPv6 egress, SSH, and ICMPv6 rules.
 
-Custom route rules can be added to the two route tables created by the module.
+Custom route rules can be added to the route tables created by the module.
 
 This module is primarily meant to be reusable to create more advanced infrastructure on [OCI][OCI] either manually in the OCI Console or by extending the Terraform code.
 
