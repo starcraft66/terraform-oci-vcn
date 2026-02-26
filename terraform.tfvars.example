@@ -32,7 +32,7 @@ create_service_gateway = false
 
 service_gateway_display_name = "none"
 
-vcn_cidrs = ["10.0.0.0/16"]
+vcn_cidrs_ipv4 = ["10.0.0.0/16"]
 
 vcn_dns_label = "vcn"
 
@@ -113,6 +113,15 @@ attached_drg_id = null
 #  sub1 = {name = "subnet1",cidr_block = "10.0.4.0/24"}
 #  sub2 = {cidr_block="10.0.5.0/24",type="private"}
 #  sub3 = {cidr_block="10.0.6.0/24",availability_domain=1}
+#}
+
+#Subnets when `enable_ipv6 = true`
+## Supported notation for ipv6cidr_blocks is "newbits, netnum" or "IPv6_CIDR"
+## E.g.: ipv6cidr_blocks=["8, 0", "2001:db8:abcd:12::/64"]
+#subnets = {
+#  sub1 = {name = "subnet1", type="public", cidr_block = "10.0.4.0/24", ipv6cidr_blocks=["8, 0"]}
+#  sub2 = {cidr_block="10.0.5.0/24", type="private", ipv6cidr_blocks=["8, 1"], ipv6_nat_route=true}
+#  sub3 = {cidr_block="10.0.7.0/24", type="private", ipv6cidr_blocks=["8, 2"]}
 #}
 
 #Logging

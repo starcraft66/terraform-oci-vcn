@@ -94,7 +94,7 @@ variable "enable_ipv6" {
   default     = true
 }
 
-variable "vcn_cidrs" {
+variable "vcn_cidrs_ipv4" {
   description = "The list of IPv4 CIDR blocks the VCN will use."
   type        = list(string)
   default     = ["10.0.0.0/24"]

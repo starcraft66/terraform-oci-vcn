@@ -27,6 +27,11 @@ output "ig_route_id" {
   value       = join(",", oci_core_route_table.ig[*].id)
 }
 
+output "ipv6_nat_route_id" {
+  description = "id of the dual-stack route table (NAT Gateway for IPv4, Internet Gateway for IPv6)"
+  value       = one(oci_core_route_table.ipv6_nat[*].id)
+}
+
 output "nat_route_id" {
   description = "id of VCN NAT gateway route table"
   value       = join(",", oci_core_route_table.nat[*].id)
@@ -49,6 +54,11 @@ output "internet_gateway_all_attributes" {
 output "ig_route_all_attributes" {
   description = "all attributes of created ig route table"
   value       = { for k, v in oci_core_route_table.ig : k => v }
+}
+
+output "ipv6_nat_route_all_attributes" {
+  description = "all attributes of the dual-stack route table (NAT for IPv4, IGW for IPv6)"
+  value       = { for k, v in oci_core_route_table.ipv6_nat : k => v }
 }
 
 output "lpg_all_attributes" {
@@ -74,6 +84,11 @@ output "service_gateway_all_attributes" {
 output "vcn_all_attributes" {
   description = "all attributes of created vcn"
   value       = { for k, v in oci_core_vcn.vcn : k => v }
+}
+
+output "vcn_ipv6cidr_blocks" {
+  description = "IPv6 CIDR blocks of the VCN (includes Oracle GUA, ULA, and BYOIPv6 prefixes)"
+  value       = oci_core_vcn.vcn.ipv6cidr_blocks
 }
 
 # subnet

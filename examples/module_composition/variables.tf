@@ -94,7 +94,7 @@ variable "lockdown_default_seclist" {
   default     = false
 }
 
-variable "vcn_cidrs" {
+variable "vcn_cidrs_ipv4" {
   description = "The list of IPv4 CIDR blocks the VCN will use."
   type        = list(string)
   default     = ["10.0.0.0/16", "172.16.0.0/16", "192.168.0.0/24"]
@@ -139,3 +139,31 @@ variable "service_gateway_display_name" {
   default     = "sgw"
 }
 
+# IPv6 parameters
+
+variable "vcn_is_oracle_gua_allocation_enabled" {
+  description = "Whether Oracle assigns a Global Unicast Address (GUA) IPv6 /56 CIDR block to the VCN when IPv6 is enabled."
+  type        = bool
+  default     = true
+}
+
+variable "vcn_cidrs_ipv6" {
+  description = "List of IPv6 ULA (private) CIDR blocks for the VCN."
+  type        = list(string)
+  default     = []
+}
+
+variable "vcn_byoipv6_cidr_details" {
+  description = "List of BYOIPv6 CIDR block details for the VCN."
+  type = list(object({
+    byoipv6range_id = string
+    ipv6cidr_block  = string
+  }))
+  default = []
+}
+
+variable "ipv6_nat_route_table_display_name" {
+  description = "(Updatable) Name of the dual-stack route table (NAT for IPv4, IGW for IPv6). Does not have to be unique."
+  type        = string
+  default     = "ipv6-nat-route"
+}

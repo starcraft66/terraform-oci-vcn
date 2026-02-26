@@ -22,4 +22,5 @@ locals {
     var.label_prefix != "none" && var.nat_gateway_display_name == "none" ? "${var.label_prefix}-nat-route" : null,
     var.label_prefix != "none" && var.nat_gateway_display_name != "none" ? "${var.label_prefix}-${var.nat_gateway_display_name}" : null
   )
+  ipv6_nat_route_table_display_name = var.label_prefix == "none" ? var.ipv6_nat_route_table_display_name : "${var.label_prefix}-${var.ipv6_nat_route_table_display_name}"
 }

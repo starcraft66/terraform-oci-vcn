@@ -52,7 +52,7 @@ module "vcn_spokes" {
   create_nat_gateway           = each.value["create_nat_gateway"]       # boolean: true or false
   create_service_gateway       = each.value["create_service_gateway"]   # boolean: true or false
   enable_ipv6                  = each.value["enable_ipv6"]              # boolean: true or false
-  vcn_cidrs                    = each.value["cidrs"]                    # List of IPv4 CIDRs
+  vcn_cidrs_ipv4               = each.value["cidrs"]                    # List of IPv4 CIDRs
   vcn_dns_label                = each.value["dns_label"]                # string
   vcn_name                     = each.key                               # string
   internet_gateway_route_rules = var.internet_gateway_route_rules

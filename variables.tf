@@ -64,6 +64,27 @@ variable "enable_ipv6" {
   default     = false
 }
 
+variable "vcn_is_oracle_gua_allocation_enabled" {
+  description = "Whether Oracle assigns a Global Unicast Address (GUA) IPv6 /56 CIDR block to the VCN when IPv6 is enabled."
+  type        = bool
+  default     = true
+}
+
+variable "vcn_cidrs_ipv6" {
+  description = "List of IPv6 ULA (private) CIDR blocks for the VCN. Maps to the OCI ipv6private_cidr_blocks attribute."
+  type        = list(string)
+  default     = []
+}
+
+variable "vcn_byoipv6_cidr_details" {
+  description = "List of BYOIPv6 CIDR block details for the VCN. Each entry requires a byoipv6range_id and ipv6cidr_block."
+  type = list(object({
+    byoipv6range_id = string
+    ipv6cidr_block  = string
+  }))
+  default = []
+}
+
 variable "lockdown_default_seclist" {
   description = "whether to remove all default security rules from the VCN Default Security List"
   default     = true
@@ -76,7 +97,7 @@ variable "nat_gateway_public_ip_id" {
   type        = string
 }
 
-variable "vcn_cidrs" {
+variable "vcn_cidrs_ipv4" {
   description = "The list of IPv4 CIDR blocks the VCN will use."
   default     = ["10.0.0.0/16"]
   type        = list(string)
@@ -140,6 +161,17 @@ variable "service_gateway_display_name" {
   validation {
     condition     = length(var.service_gateway_display_name) > 0
     error_message = "The service_gateway_display_name value cannot be an empty string."
+  }
+}
+
+variable "ipv6_nat_route_table_display_name" {
+  description = "(Updatable) Name of the dual-stack route table (NAT Gateway for IPv4, Internet Gateway for IPv6). Does not have to be unique."
+  type        = string
+  default     = "ipv6-nat-route"
+
+  validation {
+    condition     = length(var.ipv6_nat_route_table_display_name) > 0
+    error_message = "The ipv6_nat_route_table_display_name value cannot be an empty string."
   }
 }
 

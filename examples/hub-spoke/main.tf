@@ -24,7 +24,7 @@ module "vcn_hub" {
   create_nat_gateway       = var.create_nat_gateway       # boolean: true or false
   create_service_gateway   = var.create_service_gateway   # boolean: true or false
   enable_ipv6              = var.enable_ipv6
-  vcn_cidrs                = var.vcn_cidrs # List of IPv4 CIDRs
+  vcn_cidrs_ipv4           = var.vcn_cidrs_ipv4 # List of IPv4 CIDRs
   vcn_dns_label            = var.vcn_dns_label
   vcn_name                 = var.vcn_name
 
@@ -75,7 +75,7 @@ module "vcn_spoke1" {
   lockdown_default_seclist = true            # boolean: true or false
   create_nat_gateway       = false           # boolean: true or false
   create_service_gateway   = false           # boolean: true or false
-  vcn_cidrs                = ["10.0.1.0/24"] # VCN CIDR
+  vcn_cidrs_ipv4           = ["10.0.1.0/24"] # VCN CIDR
   vcn_dns_label            = "fraspoke1"
   vcn_name                 = "spoke1"
 
@@ -107,7 +107,7 @@ module "vcn_spoke2" {
   lockdown_default_seclist = true            # boolean: true or false
   create_nat_gateway       = false           # boolean: true or false
   create_service_gateway   = false           # boolean: true or false
-  vcn_cidrs                = ["10.0.2.0/24"] # VCN CIDR
+  vcn_cidrs_ipv4           = ["10.0.2.0/24"] # VCN CIDR
   vcn_dns_label            = "fraspoke2"
   vcn_name                 = "spoke2"
 
@@ -137,7 +137,7 @@ module "vcn_spoke3" {
   lockdown_default_seclist = true            # boolean: true or false
   create_nat_gateway       = false           # boolean: true or false
   create_service_gateway   = false           # boolean: true or false
-  vcn_cidrs                = ["10.0.3.0/24"] # VCN CIDR
+  vcn_cidrs_ipv4           = ["10.0.3.0/24"] # VCN CIDR
   vcn_dns_label            = "fraspoke3"
   vcn_name                 = "spoke3"
 

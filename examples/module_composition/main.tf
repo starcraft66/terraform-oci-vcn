@@ -23,15 +23,21 @@ module "vcn" {
   create_nat_gateway       = var.create_nat_gateway       # boolean: true or false
   create_service_gateway   = var.create_service_gateway   # boolean: true or false
   enable_ipv6              = var.enable_ipv6
-  vcn_cidrs                = var.vcn_cidrs # List of IPv4 CIDRs
+  vcn_cidrs_ipv4           = var.vcn_cidrs_ipv4 # List of IPv4 CIDRs
   vcn_dns_label            = var.vcn_dns_label
   vcn_name                 = var.vcn_name
 
+  # IPv6 parameters (optional, requires enable_ipv6 = true)
+  vcn_is_oracle_gua_allocation_enabled = var.vcn_is_oracle_gua_allocation_enabled
+  vcn_cidrs_ipv6                       = var.vcn_cidrs_ipv6
+  vcn_byoipv6_cidr_details             = var.vcn_byoipv6_cidr_details
+
   # gateways parameters
-  internet_gateway_display_name = var.internet_gateway_display_name
-  nat_gateway_display_name      = var.nat_gateway_display_name
-  service_gateway_display_name  = var.service_gateway_display_name
-  attached_drg_id               = var.attached_drg_id
+  internet_gateway_display_name     = var.internet_gateway_display_name
+  nat_gateway_display_name          = var.nat_gateway_display_name
+  service_gateway_display_name      = var.service_gateway_display_name
+  ipv6_nat_route_table_display_name = var.ipv6_nat_route_table_display_name
+  attached_drg_id                   = var.attached_drg_id
 }
 
 # Outputs
@@ -41,6 +47,7 @@ output "module_vcn_ids" {
   value = {
     internet_gateway_id          = module.vcn.internet_gateway_id
     internet_gateway_route_id    = module.vcn.ig_route_id
+    ipv6_nat_route_id            = module.vcn.ipv6_nat_route_id
     nat_gateway_id               = module.vcn.nat_gateway_id
     nat_gateway_route_id         = module.vcn.nat_route_id
     service_gateway_id           = module.vcn.service_gateway_id
@@ -49,6 +56,6 @@ output "module_vcn_ids" {
     vcn_default_route_table_id   = module.vcn.vcn_all_attributes.default_route_table_id
     vcn_default_dhcp_options_id  = module.vcn.vcn_all_attributes.default_dhcp_options_id
     vcn_id                       = module.vcn.vcn_id
+    vcn_ipv6cidr_blocks          = module.vcn.vcn_ipv6cidr_blocks
   }
 }
-

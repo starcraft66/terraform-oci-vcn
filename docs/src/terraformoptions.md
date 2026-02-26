@@ -32,8 +32,12 @@
 | nat_gateway_public_ip_id | OCID of reserved IP address for NAT gateway. If default value "none" is used, then a public IP address is selected from Oracle’s public IP pool. | string | none|
 | nat_gateway_route_rules | (Updatable) List of routing rules to add to NAT Gateway Route Table | list(map(string)) | null|
 | service_gateway_display_name | (Updatable) Name of Service Gateway. Does not have to be unique. | string | service-gateway|
-| vcn_cidrs | (Updatable) The list of IPv4 CIDR blocks the VCN will use. The CIDR block specified for the VCN must not overlap with the CIDR block of another network. | string | ["10.0.0.0/16"]|
-| vcn_dns_label | (Optional)A DNS label for the VCN, used in conjunction with the VNIC’s hostname and subnet’s DNS label to form a fully qualified domain name (FQDN) for each VNIC within this subnet. DNS resolution for hostnames in the VCN is disabled if null. | string | vcnmodule|
+| ipv6_nat_route_table_display_name | (Updatable) Name of the dual-stack route table (NAT for IPv4, IGW for IPv6). Does not have to be unique. | string | ipv6-nat-route|
+| vcn_byoipv6_cidr_details | (Optional) List of BYOIPv6 CIDR block details for the VCN. Each entry requires a byoipv6range_id and ipv6cidr_block. | list(object) | []|
+| vcn_cidrs_ipv4 | (Updatable) The list of IPv4 CIDR blocks the VCN will use. The CIDR block specified for the VCN must not overlap with the CIDR block of another network. | list(string) | ["10.0.0.0/16"]|
+| vcn_cidrs_ipv6 | (Optional) List of IPv6 ULA (private) CIDR blocks for the VCN. Maps to the OCI ipv6private_cidr_blocks attribute. | list(string) | []|
+| vcn_dns_label | (Optional)A DNS label for the VCN, used in conjunction with the VNIC's hostname and subnet's DNS label to form a fully qualified domain name (FQDN) for each VNIC within this subnet. DNS resolution for hostnames in the VCN is disabled if null. | string | vcnmodule|
+| vcn_is_oracle_gua_allocation_enabled | (Optional) Whether Oracle assigns a Global Unicast Address (GUA) IPv6 /56 CIDR block to the VCN when IPv6 is enabled. | bool | true|
 | vcn_name | (Optional)(Updatable) The name of the VCN that will be appended to the label_prefix. | string | vcn|
 
 ### Subnets

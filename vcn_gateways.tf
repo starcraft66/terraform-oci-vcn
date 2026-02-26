@@ -190,7 +190,7 @@ resource "oci_core_nat_gateway" "nat_gateway" {
   freeform_tags = var.freeform_tags
   defined_tags  = var.defined_tags
 
-  public_ip_id = var.nat_gateway_public_ip_id != "none" ? var.nat_gateway_public_ip_id != "RESERVED" ?  var.nat_gateway_public_ip_id : join(",",oci_core_public_ip.nat_gateway_public_ip.*.id) : null
+  public_ip_id = var.nat_gateway_public_ip_id != "none" ? var.nat_gateway_public_ip_id != "RESERVED" ? var.nat_gateway_public_ip_id : join(",", oci_core_public_ip.nat_gateway_public_ip.*.id) : null
 
   vcn_id = oci_core_vcn.vcn.id
 
@@ -301,7 +301,102 @@ resource "oci_core_route_table" "nat" {
   count = var.create_nat_gateway ? 1 : 0
 }
 
+############################################################
+# Dual-Stack Route Table: NAT for IPv4, IGW for IPv6 (GUA)
+############################################################
 
+resource "oci_core_route_table" "ipv6_nat" {
+  compartment_id = var.compartment_id
+  display_name   = local.ipv6_nat_route_table_display_name
+
+  freeform_tags = var.freeform_tags
+  defined_tags  = var.defined_tags
+
+  route_rules {
+    # NAT Gateway as default gateway for IPv4
+    destination       = local.anywhere
+    destination_type  = "CIDR_BLOCK"
+    network_entity_id = oci_core_nat_gateway.nat_gateway[0].id
+    description       = "NAT Gateway as default gateway for IPv4"
+  }
+
+  route_rules {
+    # Internet Gateway as default gateway for IPv6 (GUA)
+    destination       = local.anywhere_ipv6
+    destination_type  = "CIDR_BLOCK"
+    network_entity_id = oci_core_internet_gateway.ig[0].id
+    description       = "Internet Gateway as default gateway for IPv6"
+  }
+
+  # NOTE: Service Gateway "All Services" CIDR cannot coexist with Internet Gateway
+  # in the same route table (OCI restriction). Traffic to OCI services from this
+  # route table will go via NAT Gateway (IPv4) or IGW (IPv6) instead.
+
+  dynamic "route_rules" {
+    # filter var.nat_gateway_route_rules for routes with "drg" as destination
+    # and steer traffic to the attached DRG if available
+    for_each = var.nat_gateway_route_rules != null ? { for k, v in var.nat_gateway_route_rules : k => v
+    if v.network_entity_id == "drg" && var.attached_drg_id != null } : {}
+
+    content {
+      destination       = route_rules.value.destination
+      destination_type  = route_rules.value.destination_type
+      network_entity_id = var.attached_drg_id
+      description       = route_rules.value.description
+    }
+  }
+
+  dynamic "route_rules" {
+    # filter var.nat_gateway_route_rules for routes with "nat_gateway" as destination
+    # and steer traffic to the module created NAT Gateway
+    for_each = var.nat_gateway_route_rules != null ? { for k, v in var.nat_gateway_route_rules : k => v
+    if v.network_entity_id == "nat_gateway" } : {}
+
+    content {
+      destination       = route_rules.value.destination
+      destination_type  = route_rules.value.destination_type
+      network_entity_id = oci_core_nat_gateway.nat_gateway[0].id
+      description       = route_rules.value.description
+    }
+  }
+
+  dynamic "route_rules" {
+    # filter var.nat_gateway_route_rules for routes with "lpg@" as destination
+    # and steer traffic to the attached LPG if available
+    for_each = var.nat_gateway_route_rules != null ? { for k, v in var.nat_gateway_route_rules : k => v
+    if startswith(v.network_entity_id, "lpg@") && var.local_peering_gateways != null } : {}
+
+    content {
+      destination       = route_rules.value.destination
+      destination_type  = route_rules.value.destination_type
+      network_entity_id = oci_core_local_peering_gateway.lpg[split("@", route_rules.value.network_entity_id)[1]].id
+      description       = route_rules.value.description
+    }
+  }
+
+  dynamic "route_rules" {
+    # filter var.nat_gateway_route_rules for generic routes
+    # can take any Named Value : String, Input Variable, Local Value, Data Source, Resource, Module Output ...
+    # useful for gateways that are not managed by the module
+    for_each = var.nat_gateway_route_rules != null ? { for k, v in var.nat_gateway_route_rules : k => v
+    if contains(["drg", "nat_gateway"], v.network_entity_id) == false && startswith(v.network_entity_id, "lpg@") == false } : {}
+
+    content {
+      destination       = route_rules.value.destination
+      destination_type  = route_rules.value.destination_type
+      network_entity_id = route_rules.value.network_entity_id
+      description       = route_rules.value.description
+    }
+  }
+
+  vcn_id = oci_core_vcn.vcn.id
+
+  lifecycle {
+    ignore_changes = [defined_tags, freeform_tags]
+  }
+
+  count = var.create_nat_gateway && var.create_internet_gateway && var.enable_ipv6 ? 1 : 0
+}
 
 #############################
 # Local Peering Gateway (LPG)

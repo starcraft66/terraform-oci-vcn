@@ -7,7 +7,7 @@ terraform {
   required_providers {
     oci = {
       source  = "oracle/oci"
-      version = ">=4.67.3"
+      version = ">=6.32.0"
     }
   }
   required_version = ">= 1.0.0"
@@ -34,7 +34,7 @@ module "vcn" {
   create_nat_gateway       = var.create_nat_gateway       # boolean: true or false
   create_service_gateway   = var.create_service_gateway   # boolean: true or false
   enable_ipv6              = var.enable_ipv6
-  vcn_cidrs                = var.vcn_cidrs # List of IPv4 CIDRs
+  vcn_cidrs_ipv4           = var.vcn_cidrs_ipv4 # List of IPv4 CIDRs
   vcn_dns_label            = var.vcn_dns_label
   vcn_name                 = var.vcn_name
 
